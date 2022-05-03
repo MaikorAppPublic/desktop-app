@@ -1,0 +1,22 @@
+[package]
+name = "desktop"
+version = "0.1.0"
+edition = "2021"
+authors = ["Ray Britton <raybritton@pm.me>"]
+description = "Maikor desktop app"
+license = "MIT"
+repository = "https://github.com/MaikorAppPublic/desktop"
+readme = "README.md"
+homepage = "https://maikor.app"
+keywords = ["game","gamedev","2d","vm"]
+categories = ["games"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+maikor-vm-interface = {version="0.1.0", features =["rgba"]}
+maikor-vm-core = "0.1.0"
+pixels-graphics-lib = "0.3.1"
+winit = "0.25"
+winit_input_helper = "0.10"
+anyhow = "1.0.57"
