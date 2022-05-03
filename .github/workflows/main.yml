@@ -10,15 +10,15 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
-          - name: Install stable toolchain
-            uses: actions-rs/toolchain@v1
-            with:
-              profile: minimal
-              toolchain: stable
-              override: true
-          - run: cargo fmt --all -- --check
-          - run: cargo clippy --all-targets -- -D clippy::all
-          - run: cargo test
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --all-targets -- -D clippy::all
+      - run: cargo test
   build_and_release:
     name: Build and Release
     strategy:
