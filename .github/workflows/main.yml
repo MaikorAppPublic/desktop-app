@@ -66,7 +66,6 @@ jobs:
           strip desktop.exe
           7z a ../../../${{ matrix.name }} desktop.exe
           cd ../../..
-          7z a ${{ matrix.name }} resources/map*
       - name: Prepare build artifacts [-nix]
         if: matrix.os != 'windows-latest'
         run: |
@@ -74,7 +73,6 @@ jobs:
           strip desktop
           tar cvf ../../../${{ matrix.name }} desktop
           cd ../../..
-          tar rvf ${{ matrix.name }} resources/map*
           gzip -cv ${{ matrix.name }} > temp
           mv temp ${{ matrix.name }}
       - uses: softprops/action-gh-release@v1
