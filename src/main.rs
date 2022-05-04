@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 use anyhow::Result;
 use maikor_vm_core::constants::graphics::{SCREEN_HEIGHT, SCREEN_WIDTH};
 use maikor_vm_interface::VMHost;

@@ -33,12 +33,15 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             name: desktop-x86_64-unknown-linux-gnu.tar.gz
+            command: build
           - target: x86_64-apple-darwin
             os: macOS-latest
             name: desktop-x86_64-apple-darwin.tar.gz
+            command: bundle
           - target: x86_64-pc-windows-msvc
             os: windows-latest
             name: desktop-x86_64-pc-windows-msvc.zip
+            command: build
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -56,7 +59,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           use-cross: true
-          command: build
+          command: ${{ matrix.command }}
           args: --release --target=${{ matrix.target }}
 
       - name: Prepare build artifacts [Windows]

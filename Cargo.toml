@@ -11,6 +11,12 @@ homepage = "https://maikor.app"
 keywords = ["game","gamedev","2d","vm"]
 categories = ["games"]
 
+[package.metadata.bundle]
+name = "Maikor"
+identifer = "app.maikor"
+category = "public.app-category.games"
+copyright = "Copyright (c) Ray Britton 2022. All rights reserved."
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
