@@ -1,17 +1,22 @@
 #![windows_subsystem = "windows"]
 
+mod gen;
+mod cmdr;
+
 use anyhow::Result;
-use maikor_vm_core::constants::graphics::{SCREEN_HEIGHT, SCREEN_WIDTH};
+use maikor_platform::constants::{SAVE_COUNT, SCREEN_HEIGHT, SCREEN_WIDTH};
+use maikor_platform::mem::sizes;
 use maikor_vm_interface::VMHost;
 use pixels_graphics_lib::{setup, WindowScaling};
 use std::thread::sleep;
 use std::time::Duration;
-use winit::event::{Event, VirtualKeyCode};
+use winit::event::Event;
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit_input_helper::WinitInputHelper;
+use crate::cmdr::Cmdr;
+use crate::gen::game;
 
 fn main() -> Result<()> {
-    let mut rendered = false;
     let event_loop = EventLoop::new();
     let mut input = WinitInputHelper::new();
     let (window, mut graphics) = setup(
@@ -21,9 +26,20 @@ fn main() -> Result<()> {
         &event_loop,
     )?;
 
-    let mut vm_host = VMHost::new();
-    vm_host.pop_test();
-    vm_host.run();
+    let on_save_invalidated = |slot: usize| {
+        println!("Save {} invalidated", slot);
+    };
+    let on_halt = |error: Option<String>| {
+        println!("Halt detected, error: {:?}", error);
+    };
+
+    let mut vm_host = VMHost::new(Box::new(on_save_invalidated), Box::new(on_halt)).unwrap();
+
+    vm_host.vm.load_game(game(), &[[0; sizes::SAVE_BANK as usize]; SAVE_COUNT as usize]).unwrap();
+
+    vm_host.vm.init();
+
+    let mut cmdr = Cmdr::new(vm_host);
 
     event_loop.run(move |event, _, control_flow| {
         if let Event::RedrawRequested(_) = event {
@@ -37,14 +53,11 @@ fn main() -> Result<()> {
                 return;
             }
 
-            if !rendered {
-                rendered = true;
-                vm_host.render(graphics.pixels.get_frame());
-            }
+            cmdr.render(&mut graphics);
         }
 
         if input.update(&event) {
-            if input.key_pressed(VirtualKeyCode::Escape) || input.quit() {
+            if input.quit() {
                 *control_flow = ControlFlow::Exit;
                 return;
             }
@@ -55,9 +68,17 @@ fn main() -> Result<()> {
 
             //put your input handling code here
 
+            if cmdr.input(&input) {
+                *control_flow = ControlFlow::Exit;
+            }
+
             window.request_redraw();
         }
 
+        if cmdr.update() {
+            println!("Halted: {:?}", cmdr.vm_host.vm.error);
+            *control_flow = ControlFlow::Exit;
+        }
         sleep(Duration::from_millis(1));
     });
 }
