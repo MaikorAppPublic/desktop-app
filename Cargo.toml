@@ -8,7 +8,7 @@ license = "MIT"
 repository = "https://github.com/MaikorAppPublic/desktop"
 readme = "README.md"
 homepage = "https://maikor.app"
-keywords = ["game","gamedev","2d","vm"]
+keywords = ["game", "gamedev", "2d", "vm"]
 categories = ["games"]
 
 [package.metadata.bundle]
@@ -18,7 +18,7 @@ category = "public.app-category.games"
 copyright = "Copyright (c) Ray Britton 2022. All rights reserved."
 
 [dependencies]
-maikor-vm-interface = {version="0.1.8", features =["rgba"]}
+maikor-vm-interface = { version = "0.1.10", features = ["rgba"] }
 maikor-platform = "0.1.27"
 maikor-vm-file = "0.1.9"
 pixels-graphics-lib = "0.3.1"

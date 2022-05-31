@@ -1,3 +1,4 @@
+use std::time::Instant;
 use maikor_vm_interface::VMHost;
 use pixels_graphics_lib::color::{BLACK, BLUE, WHITE};
 use pixels_graphics_lib::drawing::PixelWrapper;
@@ -53,14 +54,15 @@ impl Cmdr {
             self.vm_host.render(graphics.pixels.get_frame());
             for (i,item) in self.overlay.iter().enumerate() {
                 match item {
-                    Overlay::PC => graphics.draw_text(&format!("PC: {:>5}", self.vm_host.vm.pc), 10, 31, i as isize, TextSize::Small, WHITE),
+                    Overlay::PC => graphics.draw_text(&format!("PC: {: >5}", self.vm_host.vm.pc), 10, 31, i as isize, TextSize::Small, WHITE),
                     Overlay::MemByte(addr) => {
-                        graphics.draw_text(&format!("{:>5}: {:>3}", addr, self.vm_host.vm.memory[*addr as usize]), 12, 30, i as isize, TextSize::Small, WHITE)
+                        graphics.draw_text(&format!("{}: {: >3}", addr, self.vm_host.vm.memory[*addr as usize]), 12, 30, i as isize, TextSize::Small, WHITE)
                     }
                     Overlay::Reg(_) => {}
                     Overlay::ExtReg(_) => {}
                 }
             }
+            graphics.draw_text(&format!("{}", self.vm_host.vm.cycles_executed), 22, 30, 22, TextSize::Small, WHITE);
         }
     }
 
@@ -75,10 +77,10 @@ impl Cmdr {
                 self.active = true;
                 return false;
             }
-            if input.key_pressed(VirtualKeyCode::W) {
+            if input.key_held(VirtualKeyCode::W) {
                 self.vm_host.input_state.up = true;
                 self.vm_host.input_state.cached = None;
-            } else if input.key_released(VirtualKeyCode::W) {
+            } else {
                 self.vm_host.input_state.up = false;
                 self.vm_host.input_state.cached = None;
             }

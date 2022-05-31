@@ -5,7 +5,7 @@ mod cmdr;
 
 use anyhow::Result;
 use maikor_platform::constants::{SAVE_COUNT, SCREEN_HEIGHT, SCREEN_WIDTH};
-use maikor_platform::mem::sizes;
+use maikor_platform::mem::{address, sizes};
 use maikor_vm_interface::VMHost;
 use pixels_graphics_lib::{setup, WindowScaling};
 use std::thread::sleep;
