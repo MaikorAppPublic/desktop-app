@@ -1,8 +1,10 @@
 #![windows_subsystem = "windows"]
 
-mod gen;
 mod cmdr;
+mod gen;
 
+use crate::cmdr::Cmdr;
+use crate::gen::game;
 use anyhow::Result;
 use maikor_platform::constants::{SAVE_COUNT, SCREEN_HEIGHT, SCREEN_WIDTH};
 use maikor_platform::mem::{address, sizes};
@@ -13,8 +15,6 @@ use std::time::Duration;
 use winit::event::Event;
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit_input_helper::WinitInputHelper;
-use crate::cmdr::Cmdr;
-use crate::gen::game;
 
 fn main() -> Result<()> {
     let event_loop = EventLoop::new();
@@ -35,7 +35,13 @@ fn main() -> Result<()> {
 
     let mut vm_host = VMHost::new(Box::new(on_save_invalidated), Box::new(on_halt)).unwrap();
 
-    vm_host.vm.load_game(game(), &[[0; sizes::SAVE_BANK as usize]; SAVE_COUNT as usize]).unwrap();
+    vm_host
+        .vm
+        .load_game(
+            game(),
+            &[[0; sizes::SAVE_BANK as usize]; SAVE_COUNT as usize],
+        )
+        .unwrap();
 
     vm_host.vm.init();
 
