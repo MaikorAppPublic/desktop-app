@@ -8,6 +8,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+      - run: sudo apt-get -y install alsa-tools libasound2-dev libudev-dev pkg-config build-essential
       - name: Checkout sources
         uses: actions/checkout@v2
       - name: Install stable toolchain
@@ -49,7 +50,7 @@ jobs:
       - name: Install linux dependencies
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get install libasound2-dev libudev-dev pkg-config build-essential
+          sudo apt-get -y install alsa-tools libasound2-dev libudev-dev pkg-config build-essential
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
